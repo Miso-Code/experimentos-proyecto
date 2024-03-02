@@ -1,0 +1,7 @@
+fastapi
+psycopg2
+pydantic
+pydantic_core
+SQLAlchemy
+urllib3
+uvicorn
