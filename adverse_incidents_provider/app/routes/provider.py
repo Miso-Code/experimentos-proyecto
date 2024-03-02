@@ -22,7 +22,7 @@ def validate_api_key(x_api_key: str = Header(None)):
 
 
 @router.get("")
-async def notify_caloric_intake(x_api_key: Annotated[str | None, Header()] = None):
+async def generate_adverse_incidents(x_api_key: Annotated[str | None, Header()] = None):
     validate_api_key(x_api_key)
     incidents = randomize_adverse_incidents()
     return JSONResponse(status_code=200, content={

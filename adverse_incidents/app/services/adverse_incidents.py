@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 from ..config.settings import Config
@@ -11,7 +13,7 @@ class AdverseIncidentsService:
 
     def _notify_adverse_incident(self, message: AdverseIncidentMessage):
         sqs_client = AWSClient().sqs
-        sqs_client.send_message(self.notification_queue, message)
+        sqs_client.send_message(self.notification_queue, json.dumps(message.__dict__))
 
     def _get_users_affected_by_incident(self, incident: AdverseIncident):
         try:
@@ -21,6 +23,8 @@ class AdverseIncidentsService:
             return []
         users_affected = []
         for user in user_locations:
+            print(user['latitude'], user['longitude'])
+            print(incident.latitude_from, incident.latitude_to, incident.longitude_from, incident.longitude_to)
             if incident.latitude_from <= user['latitude'] <= incident.latitude_to and \
                     incident.longitude_from <= user['longitude'] <= incident.longitude_to:
                 users_affected.append(user['user_id'])
@@ -40,4 +44,3 @@ class AdverseIncidentsService:
                                 latitude_to=incident['bounding_box']['latitude_to'],
                                 longitude_to=incident['bounding_box']['longitude_to'])
             )
-            print(f"Adverse incident processed: {incident}")

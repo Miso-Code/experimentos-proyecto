@@ -1,5 +1,6 @@
 from faker import Faker
 
+from ..config.settings import Config
 from ..models.schemas.schema import AdverseIncident, BoundingBox
 from ..utils import faker_utils
 from ..utils.geo_utils import generate_random_points
@@ -19,13 +20,14 @@ def randomize_adverse_incidents():
         point = points[i]
         point_latitude = point.y
         point_longitude = point.x
+        affected_range = float(Config.ADVERSE_INCIDENTS_AFFECTED_RANGE)
         incidents.append(AdverseIncident(
             description=fake.adverse_incident(),
             bounding_box=BoundingBox(
-                latitude_from=point_latitude + 0.01,
-                longitude_from=point_longitude + 0.01,
-                latitude_to=point_latitude - 0.01,
-                longitude_to=point_longitude - 0.01
+                latitude_from=point_latitude - affected_range,
+                longitude_from=point_longitude - affected_range,
+                latitude_to=point_latitude + affected_range,
+                longitude_to=point_longitude + affected_range
             )
         ))
 

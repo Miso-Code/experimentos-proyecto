@@ -14,7 +14,7 @@ def get_incidents():
                                     headers={"x-api-key": Config.ADVERSE_INCIDENTS_PROVIDER_API_KEY})
             if response.status_code == 200:
                 incidents = response.json()
-                adverse_incidents_service.process_adverse_incidents(incidents)
+                adverse_incidents_service.process_adverse_incidents(incidents["incidents"])
             else:
                 print(f"Error: {response.status_code}")
         except Exception as e:
