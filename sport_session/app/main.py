@@ -17,6 +17,6 @@ async def not_found_error_handler(request, exc):
     )
 
 
-@app.get("/")
+@app.get("/ping")
 async def root():
     return {"message": "Sport Session Service"}

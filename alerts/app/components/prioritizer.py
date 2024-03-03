@@ -1,13 +1,14 @@
 import json
 from time import sleep
 
+from ..config.settings import Config
 from . import publisher
 from ..infrastructure.aws import AWSClient
 
 sqs = AWSClient().sqs
 
-nutritional_plan_queue_name = "nutritional_plan_queue.fifo"
-adverse_incidents_queue_name = "adverse_incidents_queue.fifo"
+nutritional_plan_queue_name = Config.NUTRITIONAL_PLAN_ALERTS_QUEUE
+adverse_incidents_queue_name = Config.ADVERSE_INCIDENTS_ALERTS_QUEUE
 
 # Global flag to signal the thread to stop
 stop_thread = False

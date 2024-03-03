@@ -20,4 +20,3 @@ class FirebaseClient:
         )
 
         response = messaging.send_each_for_multicast(message)
-        print('Successfully sent message:', response)

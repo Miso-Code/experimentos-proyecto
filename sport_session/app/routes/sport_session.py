@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.post("")
+@router.post("/")
 async def start_sport_session(sport_session: SportSessionStart,
                               sport_session_service: SportSessionService = Depends()):
     sport_session = sport_session_service.start_sport_session(sport_session)
@@ -38,7 +38,7 @@ async def get_active_sport_sessions(sport_session_service: SportSessionService =
     return JSONResponse(content=sport_sessions, status_code=200)
 
 
-@router.get("")
+@router.get("/")
 async def get_all_sessions(sport_session_service: SportSessionService = Depends()):
     sport_sessions = sport_session_service.get_sport_sessions()
     return JSONResponse(content=sport_sessions, status_code=200)
