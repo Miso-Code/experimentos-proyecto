@@ -23,8 +23,6 @@ class AdverseIncidentsService:
             return []
         users_affected = []
         for user in user_locations:
-            print(user['latitude'], user['longitude'])
-            print(incident.latitude_from, incident.latitude_to, incident.longitude_from, incident.longitude_to)
             if incident.latitude_from <= user['latitude'] <= incident.latitude_to and \
                     incident.longitude_from <= user['longitude'] <= incident.longitude_to:
                 users_affected.append(user['user_id'])

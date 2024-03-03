@@ -1,29 +1,36 @@
-import time
+import logging
+from threading import Thread
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+from .components import notifier
+from .exceptions.exceptions import NotFoundError
 
-import requests
+app = FastAPI()
 
-from .config.settings import Config
-from .services.adverse_incidents import AdverseIncidentsService
-
-
-def get_incidents():
-    adverse_incidents_service = AdverseIncidentsService()
-    while True:
-        try:
-            response = requests.get(Config.ADVERSE_INCIDENTS_PROVIDER_URL,
-                                    headers={"x-api-key": Config.ADVERSE_INCIDENTS_PROVIDER_API_KEY})
-            if response.status_code == 200:
-                incidents = response.json()
-                adverse_incidents_service.process_adverse_incidents(incidents["incidents"])
-            else:
-                print(f"Error: {response.status_code}")
-        except Exception as e:
-            print(f"Error: {e}")
-        finally:
-            print(
-                f"Waiting {Config.ADVERSE_INCIDENTS_PROVIDER_REFRESH_INTERVAL_SECONDS} seconds to get the next incidents...")
-            time.sleep(Config.ADVERSE_INCIDENTS_PROVIDER_REFRESH_INTERVAL_SECONDS)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-if __name__ == "__main__":
-    get_incidents()
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Starting prioritizer thread")
+    thread = Thread(target=notifier.get_incidents)
+    thread.start()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    notifier.stop_processing()
+
+
+@app.exception_handler(NotFoundError)
+async def not_found_error_handler(request, exc):
+    return JSONResponse(
+        status_code=404,
+        content={"message": str(exc)}
+    )
+
+
+@app.get("/ping")
+async def root():
+    return {"message": "Alerts Service"}
