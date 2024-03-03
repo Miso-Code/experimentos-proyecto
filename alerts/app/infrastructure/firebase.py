@@ -7,7 +7,9 @@ class FirebaseClient:
         cred = credentials.Certificate(service_account_key_path)
         firebase_admin.initialize_app(cred)
 
-    def send_fcm_alert(self, device_registration_token: str or list, priority: str, title: str, message: str):
+    def send_fcm_alert(self, device_registration_token: list, priority: str, title: str, message: str):
+        if device_registration_token is None or len(device_registration_token) == 0:
+            return
         message = messaging.MulticastMessage(
             notification=messaging.Notification(
                 title=title,
@@ -19,4 +21,4 @@ class FirebaseClient:
             ),
         )
 
-        response = messaging.send_each_for_multicast(message)
+        messaging.send_each_for_multicast(message)

@@ -11,7 +11,7 @@
           "appProtocol": "http"
         }
       ],
-      "image": "887664210442.dkr.ecr.us-east-1.amazonaws.com/sports_session",
+      "image": "887664210442.dkr.ecr.us-east-1.amazonaws.com/sport_session",
       "essential": true,
       "name": "sport-session-service",
       "secrets": [

@@ -37,7 +37,7 @@ const usePushNotification = () => {
   const updateDeviceTokenAPI = async (fcmToken: string) => {
     const alertsBasePath = process.env.REACT_APP_API_BASE_PATH;
     if (!alertsBasePath) {
-      conole.log("Skipping device token registration, API base path not found");
+      console.log("Skipping device token registration, API base path not found");
       return;
     }
 
@@ -61,6 +61,7 @@ const usePushNotification = () => {
         "A new message arrived! (FOREGROUND)",
         JSON.stringify(remoteMessage)
       );
+      console.log("Notification received at:", new Date().getTime())
     });
     return unsubscribe;
   };
@@ -72,6 +73,7 @@ const usePushNotification = () => {
           "A new message arrived! (BACKGROUND)",
           JSON.stringify(remoteMessage)
         );
+        console.log("Notification received at:", new Date().getTime())
       }
     );
     return unsubscribe;
@@ -84,6 +86,7 @@ const usePushNotification = () => {
           "App opened from BACKGROUND by tapping notification:",
           JSON.stringify(remoteMessage)
         );
+        console.log("Notification received at:", new Date().getTime())
       }
     );
     return unsubscribe;
@@ -94,6 +97,7 @@ const usePushNotification = () => {
 
     if (message) {
       console.log("App opened from QUIT by tapping notification:", JSON.stringify(message));
+      console.log("Notification received at:", new Date().getTime())
     }
   };
 

@@ -16,8 +16,8 @@ class SQS:
         return messages
 
     def delete_message(self, queue_name: str, message):
-        queue = self.sqs.delete_message(QueueUrl=queue_name, ReceiptHandle=message["ReceiptHandle"])
-        print(f"Message deleted from {queue}: {message['Body']}")
+        self.sqs.delete_message(QueueUrl=queue_name, ReceiptHandle=message["ReceiptHandle"])
+        print(f"Message deleted from {queue_name}")
 
 
 class AWSClient:

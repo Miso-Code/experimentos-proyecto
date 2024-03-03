@@ -9,8 +9,12 @@ from ..models.schemas.schema import UserAlertDeviceCreate
 
 
 class AlertService:
-    def __init__(self, db: Session = Depends(get_db)):
-        self.db = db
+    def __init__(self, db: Session):
+        # check if db is a session. If not it is a generator
+        if isinstance(db, Session):
+            self.db = db
+        else:
+            self.db = next(db)
 
     def register_device(self, alert_data: UserAlertDeviceCreate):
         alert = UserAlertDevice(
@@ -44,4 +48,4 @@ class AlertService:
 
     def get_user_devices(self, user_id: UUID4):
         devices = self.db.query(UserAlertDevice).filter(UserAlertDevice.user_id == user_id).all()
-        return [device.device_token for device in devices]
+        return [str(device.device_token) for device in devices]

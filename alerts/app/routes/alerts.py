@@ -1,6 +1,8 @@
 from fastapi import Depends, APIRouter
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
 
+from ..config.db import get_db
 from ..models.schemas.schema import UserAlertDeviceCreate
 from ..services.alerts import AlertService
 
@@ -12,7 +14,8 @@ router = APIRouter(
 
 
 @router.post("/register-device")
-async def register_device(user_device: UserAlertDeviceCreate, alert_service: AlertService = Depends()):
+async def register_device(user_device: UserAlertDeviceCreate, db: Session = Depends(get_db)):
+    alert_service = AlertService(db)
     alert_created = alert_service.register_device(user_device)
     return JSONResponse(
         {
@@ -25,7 +28,8 @@ async def register_device(user_device: UserAlertDeviceCreate, alert_service: Ale
 
 
 @router.delete("/{user_id}/remove-device")
-async def remove_user_device(user_id: str, device_token: str, alert_service: AlertService = Depends()):
+async def remove_user_device(user_id: str, device_token: str, db: Session = Depends(get_db)):
+    alert_service = AlertService(db)
     removed = alert_service.remove_user_device(user_id, device_token)
     return JSONResponse(
         {
@@ -36,7 +40,8 @@ async def remove_user_device(user_id: str, device_token: str, alert_service: Ale
 
 
 @router.put("/{user_id}/disable-device")
-async def disable_user_device(user_id: str, device_token: str, alert_service: AlertService = Depends()):
+async def disable_user_device(user_id: str, device_token: str, db: Session = Depends(get_db)):
+    alert_service = AlertService(db)
     disabled = alert_service.disable_user_device(user_id, device_token)
     return JSONResponse(
         {
@@ -47,7 +52,8 @@ async def disable_user_device(user_id: str, device_token: str, alert_service: Al
 
 
 @router.get("/{user_id}/devices")
-async def get_user_devices(user_id: str, alert_service: AlertService = Depends()):
+async def get_user_devices(user_id: str, db: Session = Depends(get_db)):
+    alert_service = AlertService(db)
     devices = alert_service.get_user_devices(user_id)
     return JSONResponse(
         {

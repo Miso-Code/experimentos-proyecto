@@ -1,5 +1,5 @@
 import json
-
+import time
 import requests
 
 from ..config.settings import Config
@@ -13,6 +13,8 @@ class AdverseIncidentsService:
 
     def _notify_adverse_incident(self, message: AdverseIncidentMessage):
         sqs_client = AWSClient().sqs
+        timestamp = time.time_ns() // 1_000_000
+        print(f"Adverse incident notification sent at {timestamp} ms")
         sqs_client.send_message(self.notification_queue, json.dumps(message.__dict__))
 
     def _get_users_affected_by_incident(self, incident: AdverseIncident):
