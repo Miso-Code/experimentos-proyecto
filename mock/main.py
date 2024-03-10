@@ -123,7 +123,7 @@ async def syncdb(aws_client):
 
                 aws_client.cognito.set_permanent_password(
                     email=user.email,
-                    password=user.password
+                    password=f'{user.first_name}A1234!'
                 )
 
             db.bulk_save_objects(process_users)
