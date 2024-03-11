@@ -24,7 +24,7 @@ class WebsiteUser(HttpUser):
         # self.client.get("/")
         # self.client.post("/user2", json={"name": first_name})
         self.client.request_name = "register"
-        self.client.post("/mock/stream", json={
+        self.client.post("/register", json={
             "first_name": first_name,
             "last_name": last_name,
             "email": email,
