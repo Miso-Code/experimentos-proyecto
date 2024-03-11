@@ -116,15 +116,21 @@ async def syncdb(aws_client):
                 del process_users[i]
                 users_with_errors_by_email_map[user.email] = user
 
-            for user in process_users:
-                aws_client.cognito.create_user(
-                    user=user,
-                )
 
-                aws_client.cognito.set_permanent_password(
-                    email=user.email,
-                    password=f'{user.first_name}A1234!'
-                )
+            # Cognito no permite crear usuarios en bulk, por lo que se debe crear uno por uno y esto es muy costoso
+            # operacionalmente además de que posee un límite de 50 usuarios por llamada. Decisión final: No usar Cognito
+            # sino guardar la contraseña en la base de datos (hash). El login se realizará en este servicio y la autenticación
+            # mediante un Lambda Authorizer.
+
+            # for user in process_users:
+            #     aws_client.cognito.create_user(
+            #         user=user,
+            #     )
+            #
+            #     aws_client.cognito.set_permanent_password(
+            #         email=user.email,
+            #         password=f'{user.first_name}A1234!'
+            #     )
 
             db.bulk_save_objects(process_users)
             db.commit()
